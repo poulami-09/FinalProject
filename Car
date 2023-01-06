@@ -1,0 +1,67 @@
+const int trigger = 7; // Trigger Pin of Ultrasonic Sensor
+const int echo = 6; // Echo Pin of Ultrasonic Sensor
+// Motor A connections-2 left wheels
+//int enA = 9;
+int in1 = 13;
+int in2 = 12;
+// Motor B connections- 2right wheels
+//int enB = 3;
+int in3 = 11;
+int in4 = 10;
+
+void setup() {
+   // pinMode(enA, OUTPUT);
+   // pinMode(enB, OUTPUT);
+    Serial.begin(9600); // Starting Serial Terminal
+    pinMode(trigger, OUTPUT);
+       pinMode(echo, INPUT);
+   digitalWrite(trigger, LOW);
+    pinMode(in1, OUTPUT);
+    pinMode(in2, OUTPUT);
+    pinMode(in3, OUTPUT);
+    pinMode(in4, OUTPUT);
+	
+    digitalWrite(in1, LOW);
+    digitalWrite(in2, LOW);
+    digitalWrite(in3, LOW);
+    digitalWrite(in4, LOW);
+}
+
+void loop() {
+   long duration, cm, dist=0,length=0;
+     digitalWrite(trigger, HIGH);
+   duration = pulseIn(echo, HIGH);
+   cm = microsecondsToCentimeters(duration);
+   length=cm;//length of the garden
+   Serial.print(cm);
+   Serial.print(" cm");
+   Serial.println();
+   delay(100);
+   for(dist=0;dist<=length;dist+=10)
+   {
+  if (cm >= length-dist)
+  {    
+    forward();
+    delay(1000);
+  }
+ }
+}
+void forward() {
+    // Set motors to maximum speed
+    // PWM value ranges from 0 to 255
+   // analogWrite(enA, 255);
+   // analogWrite(enB, 255);
+
+    // Turn on motor A & B (Forward motion)
+    digitalWrite(in1, HIGH);
+    digitalWrite(in2, LOW);
+    digitalWrite(in3, HIGH);
+    digitalWrite(in4, LOW);
+    delay(2000);
+	
+    // Turn off motors
+    digitalWrite(in1, LOW);
+    digitalWrite(in2, LOW);
+    digitalWrite(in3, LOW);
+    digitalWrite(in4, LOW);
+}
