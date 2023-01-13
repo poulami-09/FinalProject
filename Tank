@@ -1,0 +1,58 @@
+#include<Servo.h>
+Servo myservo;
+
+int pos,k=0;
+const int capteur_D = 4;
+//const int capteur_A = A0;
+
+int val_analogique;
+
+void setup()
+{
+    pinMode(capteur_D, INPUT);
+    myservo.attach(13);
+    myservo.write(0);
+  //pinMode(capteur_A, INPUT);
+  Serial.begin(9600);
+}
+
+void loop()
+{
+if(digitalRead(capteur_D) == LOW) 
+  {
+    Serial.println("Digital value : wet"); 
+    //For Servo Motor
+   Serial.println("Servo started.");
+   for(pos=0;pos<=180;pos++)
+   {
+    myservo.write(pos);
+    delay(25);
+   }
+   k=1;
+  }
+   
+else
+  {
+    Serial.println("Digital value : dry");
+    delay(25);
+    if(k==1)
+    {
+      for(pos=180;pos>=0;pos--)
+      {
+        myservo.write(pos);
+        delay(25);
+      } 
+      delay(25);
+   Serial.println("Servo stopped.");
+    }
+    k=0;
+    delay(10); 
+  }
+    delay(10); 
+  }
+//val_analogique=analogRead(capteur_A); 
+ //Serial.print("Analog value : ");
+// Serial.println(val_analogique); 
+ //Serial.println("");
+  delay(1000);
+}
