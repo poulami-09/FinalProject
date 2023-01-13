@@ -1,7 +1,10 @@
 #include<Servo.h>
 Servo myservo;
+const int Pin=0;
+const int limit=480;
 
 int pos,k=0;
+int pump_relay = 12;
 const int capteur_D = 4;
 //const int capteur_A = A0;
 
@@ -10,14 +13,22 @@ int val_analogique;
 void setup()
 {
     pinMode(capteur_D, INPUT);
-    myservo.attach(13);
+    myservo.attach(11);
     myservo.write(0);
+    pinMode(pump_relay, OUTPUT);
+      pinMode(12,OUTPUT);
   //pinMode(capteur_A, INPUT);
   Serial.begin(9600);
 }
 
 void loop()
 {
+   int value;
+  value=analogRead(Pin);
+  Serial.println("Soil Moisture:");
+  Serial.println(value);
+  delay(1000);
+  //Rain water 
 if(digitalRead(capteur_D) == LOW) 
   {
     Serial.println("Digital value : wet"); 
@@ -47,6 +58,15 @@ else
     }
     k=0;
     delay(10); 
+  }
+ //Soil Moisture 
+  if (value<limit)
+  {
+    digitalWrite(13,HIGH);
+  }
+  else
+  {
+    digitalWrite(13,LOW);
   }
     delay(10); 
   }
