@@ -1,22 +1,21 @@
 #include<Servo.h>
 Servo myservo;
-const int Pin=0;
+const int Pin=A0;//soil humidity sensor
 const int limit=480;
 
 int pos,k=0;
 int pump_relay = 12;
-const int capteur_D = 4;
+const int capteur_D = 4;//rain water sensor
 //const int capteur_A = A0;
 
-int val_analogique;
+//int val_analogique;
 
 void setup()
 {
-    pinMode(capteur_D, INPUT);
-    myservo.attach(11);
+    pinMode(capteur_D, INPUT);//rain water
+    myservo.attach(11);//servo motor
     myservo.write(0);
     pinMode(pump_relay, OUTPUT);
-      pinMode(12,OUTPUT);
   //pinMode(capteur_A, INPUT);
   Serial.begin(9600);
 }
@@ -24,17 +23,15 @@ void setup()
 void loop()
 {
    int value;
-  value=analogRead(Pin);
-  Serial.println("Soil Moisture:");
-  Serial.println(value);
+  digitalWrite(12,LOW);//pump is off initially
   delay(1000);
   //Rain water 
-if(digitalRead(capteur_D) == LOW) 
+if(digitalRead(capteur_D) == LOW) //rain water sensor value reading
   {
-    Serial.println("Digital value : wet"); 
+    Serial.println("Digital value : wet"); //raining
     //For Servo Motor
    Serial.println("Servo started.");
-   for(pos=0;pos<=180;pos++)
+   for(pos=0;pos<=180;pos++)//tank lid is opening
    {
     myservo.write(pos);
     delay(25);
@@ -44,11 +41,11 @@ if(digitalRead(capteur_D) == LOW)
    
 else
   {
-    Serial.println("Digital value : dry");
+    Serial.println("Digital value : dry");//not raining
     delay(25);
-    if(k==1)
+    if(k==1)//if lid is open
     {
-      for(pos=180;pos>=0;pos--)
+      for(pos=180;pos>=0;pos--)//tank lid is closing
       {
         myservo.write(pos);
         delay(25);
@@ -60,19 +57,20 @@ else
     delay(10); 
   }
  //Soil Moisture 
-  if (value<limit)
+   value=analogRead(Pin);
+   Serial.println("Soil Moisture:");
+   Serial.println(value);
+  if (value<limit)//if soil moisture is less
   {
-    digitalWrite(13,HIGH);
+    digitalWrite(12,HIGH);//relay module switches on pump
+    Serial.println("Pump started");
   }
-  else
+  else//if soil moisture is more
   {
-    digitalWrite(13,LOW);
+    digitalWrite(12,LOW);//relay module switches off pump
+    Serial.println("Pump stopped");
   }
-    delay(10); 
+    delay(25); 
   }
-//val_analogique=analogRead(capteur_A); 
- //Serial.print("Analog value : ");
-// Serial.println(val_analogique); 
- //Serial.println("");
   delay(1000);
 }
