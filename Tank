@@ -6,17 +6,13 @@ const int limit=480;
 int pos,k=0;
 int pump_relay = 12;
 const int capteur_D = 4;//rain water sensor
-//const int capteur_A = A0;
-
-//int val_analogique;
 
 void setup()
 {
     pinMode(capteur_D, INPUT);//rain water
-    myservo.attach(11);//servo motor
+    myservo.attach(2);//servo motor
     myservo.write(0);
     pinMode(pump_relay, OUTPUT);
-  //pinMode(capteur_A, INPUT);
   Serial.begin(9600);
 }
 
@@ -26,17 +22,21 @@ void loop()
   digitalWrite(12,LOW);//pump is off initially
   delay(1000);
   //Rain water 
+ 
 if(digitalRead(capteur_D) == LOW) //rain water sensor value reading
   {
     Serial.println("Digital value : wet"); //raining
     //For Servo Motor
+     if(k==0){
    Serial.println("Servo started.");
-   for(pos=0;pos<=180;pos++)//tank lid is opening
-   {
+  for(pos=0;pos<=180;pos++)//tank lid is opening
+  {
     myservo.write(pos);
-    delay(25);
+   delay(50);
+
    }
    k=1;
+  }
   }
    
 else
@@ -72,5 +72,3 @@ else
   }
     delay(25); 
   }
-  delay(1000);
-}
