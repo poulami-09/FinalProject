@@ -1,4 +1,6 @@
 #include<Servo.h>
+#define echoPin 2 // attach pin D2 Arduino to pin Echo of HC-SR04
+#define trigPin 3 //attach pin D3 Arduino to pin Trig of HC-SR04
 Servo myservo;
 const int Pin=A0;//soil humidity sensor
 const int limit=900;
@@ -9,18 +11,21 @@ const int capteur_D = 4;//rain water sensor
 
 void setup()
 {
-    pinMode(capteur_D, INPUT);//rain water
-    myservo.attach(2);//servo motor
-    myservo.write(0);
-    pinMode(pump_relay, OUTPUT);
-  Serial.begin(9600);
+      pinMode(capteur_D, INPUT);//rain water
+      myservo.attach(2);//servo motor
+      myservo.write(0);
+      pinMode(trigPin, OUTPUT); // Sets the trigPin as an OUTPUT
+      pinMode(echoPin, INPUT); // Sets the echoPin as an INPUT
+      pinMode(pump_relay, OUTPUT);
+      Serial.begin(9600);
 }
 
 void loop()
 {
    int value;
-  digitalWrite(12,LOW);//pump is off initially
-  delay(1000);
+   int time=120000;
+   digitalWrite(12,LOW);//pump is off initially
+   delay(1000);
   //Rain water 
  
 if(digitalRead(capteur_D) == LOW) //rain water sensor value reading
@@ -58,13 +63,21 @@ else
   }
  //Soil Moisture 
    value=analogRead(Pin);
-   Serial.println("Soil Moisture:");
-   Serial.println(value);
+   Serial.println("Soil Moisture: ");
+   Serial.print(value);
   if (value<limit)//if soil moisture is less
   {
-    digitalWrite(12,HIGH);//relay module switches on pump
-    Serial.println("Pump started");
-    delay(120000);
+    long dist=ultrasonic();
+    if(dist<10)
+    {
+      digitalWrite(12,HIGH);//relay module switches on pump
+      Serial.println("Pump started");
+      delay(time);
+    }
+    else
+    {
+      Serial.println("Tank is empty");      
+    }
   }
   else//if soil moisture is more
   {
@@ -72,4 +85,18 @@ else
     Serial.println("Pump stopped");
   }
     delay(10000); 
+  }
+  long ultrasonic()
+  {
+      digitalWrite(trigPin, LOW);
+      delayMicroseconds(2);
+     // Sets the trigPin HIGH (ACTIVE) for 10 microseconds
+      digitalWrite(trigPin, HIGH);
+     delayMicroseconds(10);
+     digitalWrite(trigPin, LOW);
+     // Reads the echoPin, returns the sound wave travel time in microseconds
+     duration = pulseIn(echoPin, HIGH);
+      // Calculating the distance
+      distance = duration * 0.034 / 2; // Speed of sound wave divided by 2 (go and back)      
+      return distance;
   }
