@@ -1,7 +1,7 @@
 #include<Servo.h>
 Servo myservo;
 const int Pin=A0;//soil humidity sensor
-const int limit=480;
+const int limit=900;
 
 int pos,k=0;
 int pump_relay = 12;
@@ -64,11 +64,12 @@ else
   {
     digitalWrite(12,HIGH);//relay module switches on pump
     Serial.println("Pump started");
+    delay(120000);
   }
   else//if soil moisture is more
   {
     digitalWrite(12,LOW);//relay module switches off pump
     Serial.println("Pump stopped");
   }
-    delay(25); 
+    delay(10000); 
   }
