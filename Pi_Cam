@@ -1,3 +1,4 @@
 sudo raspi-config
 vcgencmd get_camera
 raspistill -o file.jpg
+sudo UPDATE_SELF=0 ./rpi-update
