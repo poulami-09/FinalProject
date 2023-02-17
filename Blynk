@@ -1,48 +1,38 @@
-//Include the library files
-#include <LiquidCrystal_I2C.h>
+
 #define BLYNK_PRINT Serial
 #include <ESP8266WiFi.h>
 #include <BlynkSimpleEsp8266.h>
+char auth[] = "vFMKGMfiiV4RKaPtFg_YtIKSpOS2JbJy";//Enter your Auth token
+char ssid[] = "JioFi3_373AA1";//Enter your WIFI name
+char pass[] = "pM#09.01$2001&";//Enter your WIFI password
+int moisture;
 
-
-char auth[] = ""vFMKGMfiiV4RKaPtFg_YtIKSpOS2JbJy"";//Enter your Auth token
-char ssid[] = "";//Enter your WIFI name
-char pass[] = "";//Enter your WIFI password
-
-BlynkTimer timer;
-
-//Define component pins
-#define sensor A0
-
-
-void setup() {
-  Serial.begin(9600);
-  pinMode(waterPump, OUTPUT);
-  digitalWrite(waterPump, HIGH);
-  lcd.init();
-  lcd.backlight();
-
-  Blynk.begin(auth, ssid, pass, "blynk.cloud", 80);
-
- 
-  //Call the function
-  timer.setInterval(100L, soilMoistureSensor);
+void setup()
+{
+Serial.begin(9600);
+Serial.println("HII");
+pinMode (A0,INPUT);
+Blynk.begin(auth, ssid, pass);
+Serial.println("Communication started with blynk");
 }
 
-//Get the button value
+void loop()
+{
+Blynk.run();
 
+moisture=analogRead(D0);
 
-//Get the soil moisture values
-void soilMoistureSensor() {
-  int value = analogRead(sensor);
-  value = map(value, 0, 1024, 0, 100);
-  value = (value - 100) * -1;
-
-  Blynk.virtualWrite(V0, value);
+if (moisture<50)
+{
+Serial.println("Low soil moisture:");
+Serial.println(moisture);
 
 }
 
-void loop() {
-  Blynk.run();//Run the Blynk library
-  timer.run();//Run the Blynk timer
+else
+{
+Serial.println("High soil moisture: moisture");
+Serial.println(moisture);
+}
+delay(1000);
 }
