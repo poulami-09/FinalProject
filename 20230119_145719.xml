@@ -1,0 +1,38 @@
+<annotation>
+	<folder>Samples</folder>
+	<filename>20230119_145719.jpg</filename>
+	<path>G:\Makaut\4th Year\8th Sem\Final year Project\Samples\20230119_145719.jpg</path>
+	<source>
+		<database>Unknown</database>
+	</source>
+	<size>
+		<width>2084</width>
+		<height>4624</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>Wall</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>85</xmin>
+			<ymin>1961</ymin>
+			<xmax>2063</xmax>
+			<ymax>2283</ymax>
+		</bndbox>
+	</object>
+	<object>
+		<name>Grass</name>
+		<pose>Unspecified</pose>
+		<truncated>1</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>70</xmin>
+			<ymin>2404</ymin>
+			<xmax>2084</xmax>
+			<ymax>4611</ymax>
+		</bndbox>
+	</object>
+</annotation>
