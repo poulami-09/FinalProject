@@ -1,3 +1,6 @@
+//sudo apt-get install python3-rpi.gpio
+//sudo pip3 install gpiozero
+
 import RPi.GPIO as GPIO
 import time
 from gpiozero import servo
@@ -24,7 +27,9 @@ GPIO.setup(ENB,GPIO.OUT)
 enb_pwm=GPIO.PWM(EBA,100)
 GPIO.setup(IN3,GPIO.OUT)
 GPIO.setup(IN4,GPIO.OUT)
+
 //servo motor
+SERVO_TRIG=5
 GRIO.setup(SERVO_TRIG,GPIO.OUT)
 servo=Servo(SERVO_TRIG)
 
