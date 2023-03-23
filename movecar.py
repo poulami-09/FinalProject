@@ -139,4 +139,38 @@ try:
   if join=="000" or join=="101": //Go forward
     forward()
     print("Straight")
+  elif join=="001" or join=="011"://turn left
+    print("left")
+    stopm(1)
+    reverse()
+    time.sleep(1)
+    stopm(1)
+    left()
+    time.sleep(1)
+    stopm(1)
+    forward()
+  elif join=="100" or join=="110"://turn right
+    print("right")
+    stopm(1)
+    reverse()
+    time.sleep(1)
+    stopm(1)
+    right()
+    time.sleep(1)
+    stopm(1)
+    forward()
+ elif join="111":
+    stopm(1)
+    reverse()
+    time.sleep(1)
+    stopm(1)
+    uturn()
+    time.sleep(3.5)
+    forward()
+    
+except KeyboardInterrupt:
+    stopm(1)
+    GPIO.cleanup()
+    
+GPIO.cleanup()
     
