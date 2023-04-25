@@ -1,9 +1,7 @@
 #include<Servo.h>
-#define echoPin 2 // attach pin D2 Arduino to pin Echo of HC-SR04
-#define trigPin 3 //attach pin D3 Arduino to pin Trig of HC-SR04
 Servo myservo;
-const int Pin=A0;//soil humidity sensor
-const int limit=900;
+const int Pin=5;//soil humidity sensor
+const int limit=500;
 
 int pos,k=0;
 int pump_relay = 12;
@@ -14,8 +12,6 @@ void setup()
       pinMode(capteur_D, INPUT);//rain water
       myservo.attach(2);//servo motor
       myservo.write(0);
-      pinMode(trigPin, OUTPUT); // Sets the trigPin as an OUTPUT
-      pinMode(echoPin, INPUT); // Sets the echoPin as an INPUT
       pinMode(pump_relay, OUTPUT);
       Serial.begin(9600);
 }
@@ -23,9 +19,9 @@ void setup()
 void loop()
 {
    int value;
-   int time=120000;
-   digitalWrite(12,LOW);//pump is off initially
+   digitalWrite(12,HIGH);//pump is off initially
    delay(1000);
+   myservo.write(0);
   //Rain water 
  
 if(digitalRead(capteur_D) == LOW) //rain water sensor value reading
@@ -37,14 +33,14 @@ if(digitalRead(capteur_D) == LOW) //rain water sensor value reading
   for(pos=0;pos<=180;pos++)//tank lid is opening
   {
     myservo.write(pos);
-   delay(50);
+   delay(100);
 
    }
    k=1;
   }
   }
    
-else
+else//not raining
   {
     Serial.println("Digital value : dry");//not raining
     delay(25);
@@ -53,7 +49,7 @@ else
       for(pos=180;pos>=0;pos--)//tank lid is closing
       {
         myservo.write(pos);
-        delay(25);
+        delay(100);
       } 
       delay(25);
    Serial.println("Servo stopped.");
@@ -62,41 +58,23 @@ else
     delay(10); 
   }
  //Soil Moisture 
-   value=analogRead(Pin);
-   Serial.println("Soil Moisture: ");
-   Serial.print(value);
-  if (value<limit)//if soil moisture is less
+   value=digitalRead(Pin);
+   Serial.print("Soil Moisture: ");
+   Serial.println(value);
+  if (value==0)//if soil moisture is more
   {
-    long dist=ultrasonic();
-    if(dist<10)
-    {
-      digitalWrite(12,HIGH);//relay module switches on pump
-      Serial.println("Pump started");
-      delay(time);
-    }
-    else
-    {
-      Serial.println("Tank is empty");      
-    }
+
+      digitalWrite(12,HIGH);//relay module switches off pump
+      Serial.println("Pump stopped");
+      delay(100);
+      myservo.write(0);
   }
-  else//if soil moisture is more
+  else//if soil moisture is less
   {
-    digitalWrite(12,LOW);//relay module switches off pump
-    Serial.println("Pump stopped");
+    digitalWrite(12,LOW);//relay module switches on pump
+    Serial.println("Pump started");
+    delay(5000);
+    myservo.write(0);
   }
     delay(10000); 
-  }
-  long ultrasonic()
-  {
-      digitalWrite(trigPin, LOW);
-      delayMicroseconds(2);
-     // Sets the trigPin HIGH (ACTIVE) for 10 microseconds
-      digitalWrite(trigPin, HIGH);
-     delayMicroseconds(10);
-     digitalWrite(trigPin, LOW);
-     // Reads the echoPin, returns the sound wave travel time in microseconds
-     duration = pulseIn(echoPin, HIGH);
-      // Calculating the distance
-      distance = duration * 0.034 / 2; // Speed of sound wave divided by 2 (go and back)      
-      return distance;
   }
