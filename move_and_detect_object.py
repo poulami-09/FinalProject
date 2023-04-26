@@ -53,6 +53,11 @@ TRIG=22
 GPIO.setup(ECHO,GPIO.IN)
 GPIO.setup(TRIG,GPIO.OUT)
 
+#blase cutter relay module
+relay=21
+GPIO.setup(relay,GPIO.OUT)
+GPIO.output(relay,False)#blade is off initially
+
 #CAR MOVEMENTS
 def forward():
     print("Moving Forward")
@@ -60,7 +65,9 @@ def forward():
     GPIO.output(IN2,GPIO.HIGH)
     GPIO.output(IN3,GPIO.HIGH)
     GPIO.output(IN4,GPIO.HIGH)
+    GPIO.output(relay,True)#blade is on
     time.sleep(10)
+    GPIO.output(relay,False)#blade is turned off
 
 
 def left():
@@ -131,61 +138,59 @@ def movement():
     sr=0
     sl=0
 
-    try:
-      while True:
-    
-       leftturn() #left turn of uv sensor
-       time.sleep(0.5)
-       sl=0
-       d1=measure()
-       print("d1= ",d1)
+    #try:
+    while True:
+     leftturn() #left turn of uv sensor
+     time.sleep(0.5)
+     sl=0
+     d1=measure()
+     print("d1= ",d1)
 
-       if d1<=500.0:
-          sl=1
+     if d1<=500.0:
+        sl=1
       
-       center() #middle turn of uv sensor
-       time.sleep(0.5)
-       sc=0
-       d2=measure()
-       print("d2= ",d2)
+     center() #middle turn of uv sensor
+     time.sleep(0.5)
+     sc=0
+     d2=measure()
+     print("d2= ",d2)
     
-       if d2<=500.0:
-          sc=1
+     if d2<=500.0:
+        sc=1
     
-       rightturn() #right
-       time.sleep(0.5)
-       sr=0
-       d3=measure()
-       print("d3= ",d3)
+     rightturn() #right
+     time.sleep(0.5)
+     sr=0
+     d3=measure()
+     print("d3= ",d3)
              
-       if d3<=500.0:
-          sr=1
+     if d3<=500.0:
+        sr=1
       
-       join=str(sl)+str(sc)+str(sr)
-       print(join)
-       time.sleep(5)
+     join=str(sl)+str(sc)+str(sr)
+     print(join)
+     time.sleep(5)
   #8 combinations are possible
-       if join=="000" or join=="101": #Go forward
-          forward()
-          print("Car moves forward")
-       elif join=="001" or join=="011":#turn left
-         
-          print("car moving left")
-          stop(1)
-          left()
-          time.sleep(1)
-          stop(1)
-          forward()
-       elif join=="100" or join=="110":#turn right
-          print("Car moving right")
-          stop(1)
-          right()
-          time.sleep(1)
-          stop(1)
-          forward()
-       elif join=="111":
-          print("Uturn and reverse")
-          stop(1)
+     if join=="000" or join=="101": #Go forward
+        forward()
+        print("Car moves forward")
+     elif join=="001" or join=="011":#turn left
+        print("car moving left")
+        stop(1)
+        left()
+        time.sleep(1)
+        stop(1)
+        forward()
+     elif join=="100" or join=="110":#turn right
+        print("Car moving right")
+        stop(1)
+        right()
+        time.sleep(1)
+        stop(1)
+        forward()
+     elif join=="111":
+        print("Uturn and reverse")
+        stop(1)
 
 def run(model: str, camera_id: int, width: int, height: int, num_threads: int,
     enable_edgetpu: bool) -> None:
